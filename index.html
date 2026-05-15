@@ -774,7 +774,7 @@ async function cargarDatos() {
         }
 
         function renderProjection() {
-            const proyRows = rawData.proyeccion.filter(x => x.periodo === currentPeriod);
+            const proyRows = rawData.proyeccion;
 
             const data = {
             certifProyectado: {
@@ -981,8 +981,6 @@ const dataPrev = {
             dataPrev.idxs.therock.q2[i]
         )
     );
-
-    ...
 }
                 const avgMartellaPrev = calcularPromedio(promediosMartellaObrasPrev);
                 const avgTheRockPrev = calcularPromedio(promediosTheRockObrasPrev);
@@ -1005,12 +1003,11 @@ const dataPrev = {
     ? data.idxs.obras.map((obra, i) => {
 
         const indexPrev = dataPrev.idxs.obras.indexOf(obra);
-
-        if (indexPrev === -1) {
-            return {
                 const prevMartella = promediosMartellaObrasPrev[indexPrev];
                 const prevTheRock = promediosTheRockObrasPrev[indexPrev];
-
+        
+        if (indexPrev === -1) {
+            return {
                 if (!prevMartella || !prevTheRock) {
                 return {
                 martella: null,
