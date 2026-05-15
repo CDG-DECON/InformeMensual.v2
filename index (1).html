@@ -666,15 +666,21 @@
             const errorMsg = document.getElementById('login-error');
             
             if (password === CORRECT_PASSWORD) {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('main-content').classList.add('authenticated');
-                cargarDatos().then(() => {
-                renderDashboard(currentPeriod);
-            } else {
-                errorMsg.style.display = 'block';
-                document.getElementById('password-input').value = '';
-                document.getElementById('password-input').focus();
-            }
+
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-content').classList.add('authenticated');
+
+    cargarDatos().then(() => {
+        renderDashboard(currentPeriod);
+    });
+
+} else {
+
+    errorMsg.style.display = 'block';
+    document.getElementById('password-input').value = '';
+    document.getElementById('password-input').focus();
+
+}
         });
 
 let rawData = {};
@@ -768,7 +774,15 @@ async function cargarDatos() {
         }
 
         function renderProjection() {
-            const data = dataStore['proyeccion'];
+            const proyRows = rawData.proyeccion;
+
+            const data = {
+            certifProyectado: {
+            obras: proyRows.map(x => x.obra),
+            certifPrevisto: proyRows.map(x => x.certif_previsto),
+            avanceProyectado: proyRows.map(x => x.avance_proyectado)
+    }
+};
             const container = document.getElementById('dashboard-content');
             
             const totalProyectado = data.certifProyectado.certifPrevisto.reduce((a, b) => a + b, 0);
@@ -820,11 +834,66 @@ async function cargarDatos() {
                 return;
             }
 
-            const data = {
-            idxs: rawData.idxs.filter(x => x.periodo === period),
-            certif: rawData.certif.filter(x => x.periodo === period),
-            proyeccion: rawData.proyeccion.filter(x => x.periodo === period)
-            };
+            const idxRows = rawData.idxs.filter(x => x.periodo === period);
+
+const certRows = rawData.certif.filter(x => x.periodo === period);
+
+const proyRows = rawData.proyeccion.filter(x => x.periodo === period);
+
+const data = {
+
+    idxs: {
+
+        obras: idxRows.map(x => x.obra),
+
+        martella: {
+            q1: idxRows.map(x => x.martella_q1),
+            q2: idxRows.map(x => x.martella_q2)
+        },
+
+        therock: {
+            q1: idxRows.map(x => x.therock_q1),
+            q2: idxRows.map(x => x.therock_q2)
+        },
+
+        pond: {
+            martella: idxRows.map(x => x.martella_pond),
+            therock: idxRows.map(x => x.therock_pond)
+        }
+
+    },
+
+    certif: {
+
+        obras: certRows.map(x => x.obra),
+
+        avanceAcum: certRows.map(x => x.avance_acum),
+
+        certifReal: certRows.map(x => x.certif_Real),
+
+        certifPrevisto: certRows.map(x => x.certif_previsto),
+
+        desvio: certRows.map(x => x.desvio),
+
+        desvioPct: certRows.map(x => x.desvio_pct),
+
+        adicionales: certRows.map(x => x.adicionales),
+
+        isPampUSD: certRows.map(x => x.moneda === 'USD')
+
+    },
+
+    proyeccion: {
+
+        obras: proyRows.map(x => x.obra),
+
+        certifPrevisto: proyRows.map(x => x.certif_previsto),
+
+        avanceProyectado: proyRows.map(x => x.avance_proyectado)
+
+    }
+
+};
             const container = document.getElementById('dashboard-content');
             
             const promediosMartellaObras = data.idxs.obras.map((obra, i) => 
