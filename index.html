@@ -839,7 +839,7 @@ async function cargarDatos() {
 
 const certRows = rawData.certif.filter(x => x.periodo === period);
 
-const proyRows = rawData.proyeccion.filter(x => x.periodo === period);
+const proyRows = rawData.proyeccion;
 
 const data = {
 
@@ -963,14 +963,27 @@ const dataPrev = {
             .map(x => x.certif_previsto)
     }
 };
+            let promediosMartellaObrasPrev = [];
+            let promediosTheRockObrasPrev = [];
+
             if (period === '2026-04') {
-               
-                const promediosMartellaObrasPrev = dataPrev.idxs.obras.map((obra, i) => 
-                    calcularPromedioObra(dataPrev.idxs.martella.q1[i], dataPrev.idxs.martella.q2[i])
-                );
-                const promediosTheRockObrasPrev = dataPrev.idxs.obras.map((obra, i) => 
-                    calcularPromedioObra(dataPrev.idxs.therock.q1[i], dataPrev.idxs.therock.q2[i])
-                );
+
+            promediosMartellaObrasPrev = dataPrev.idxs.obras.map((obra, i) =>
+            calcularPromedioObra(
+            dataPrev.idxs.martella.q1[i],
+            dataPrev.idxs.martella.q2[i]
+        )
+    );
+
+            promediosTheRockObrasPrev = dataPrev.idxs.obras.map((obra, i) =>
+            calcularPromedioObra(
+            dataPrev.idxs.therock.q1[i],
+            dataPrev.idxs.therock.q2[i]
+        )
+    );
+
+    ...
+}
                 const avgMartellaPrev = calcularPromedio(promediosMartellaObrasPrev);
                 const avgTheRockPrev = calcularPromedio(promediosTheRockObrasPrev);
                 const totalCertifRealPrev = dataPrev.certif.certifReal.reduce((sum, val, i) => {
@@ -995,10 +1008,15 @@ const dataPrev = {
 
         if (indexPrev === -1) {
             return {
+                const prevMartella = promediosMartellaObrasPrev[indexPrev];
+                const prevTheRock = promediosTheRockObrasPrev[indexPrev];
+
+                if (!prevMartella || !prevTheRock) {
+                return {
                 martella: null,
                 therock: null
-            };
-        }
+    };
+}
 
         return {
             martella: ((promediosMartellaObras[i] - promediosMartellaObrasPrev[indexPrev]) / promediosMartellaObrasPrev[indexPrev]) * 100,
