@@ -829,6 +829,7 @@ async function cargarDatos() {
         }
 
         function renderDashboard(period) {
+            try {
             if (period === 'proyeccion') {
                 renderProjection();
                 return;
@@ -1517,3 +1518,10 @@ const dataPrev = {
     </script>
 </body>
 </html>
+} catch(error) {
+
+        console.error('ERROR renderDashboard:', error);
+
+    }
+
+}
