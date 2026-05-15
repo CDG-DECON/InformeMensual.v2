@@ -892,6 +892,10 @@ const data = {
 
         avanceProyectado: proyRows.map(x => x.avance_proyectado)
 
+    } catch(error) {
+
+        console.error('ERROR renderDashboard:', error);
+
     }
 
 };
@@ -1346,7 +1350,7 @@ const dataPrev = {
                                     ctx.font = 'bold 11px JetBrains Mono';
                                     ctx.textAlign = 'center';
                                     
-                                    const isPositive = cambio.includes('positive');
+                                    const isPositive = cambio > 0;
                                     ctx.fillStyle = isPositive ? '#10b981' : '#ef4444';
                                     
                                     const tempDiv = document.createElement('div');
@@ -1518,10 +1522,4 @@ const dataPrev = {
     </script>
 </body>
 </html>
-} catch(error) {
 
-        console.error('ERROR renderDashboard:', error);
-
-    }
-
-}
