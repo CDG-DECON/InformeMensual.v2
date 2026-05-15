@@ -891,13 +891,7 @@ const data = {
         certifPrevisto: proyRows.map(x => x.certif_previsto),
 
         avanceProyectado: proyRows.map(x => x.avance_proyectado)
-
-    } catch(error) {
-
-        console.error('ERROR renderDashboard:', error);
-
-    }
-
+}
 };
             const container = document.getElementById('dashboard-content');
             
@@ -1226,8 +1220,11 @@ const dataPrev = {
 
             renderIdxChart(data, promediosMartellaObras, promediosTheRockObras, cambiosPorObra);
             renderCertifChart(data);
-        }
+            } catch(error) {
 
+            console.error('ERROR renderDashboard:', error);
+            }
+        }
         function renderIdxChart(data, promediosMartella, promediosTheRock, cambios) {
             const ctx = document.getElementById('idxChart');
             
