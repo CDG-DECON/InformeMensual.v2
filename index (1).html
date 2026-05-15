@@ -668,6 +668,7 @@
             if (password === CORRECT_PASSWORD) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-content').classList.add('authenticated');
+                cargarDatos().then(() => {
                 renderDashboard(currentPeriod);
             } else {
                 errorMsg.style.display = 'block';
@@ -676,65 +677,29 @@
             }
         });
 
-        const dataStore = {
-            'proyeccion': {
-                month: 'Proyección Próximo Período',
-                isProjection: true,
-                certifProyectado: {
-                    obras: ['SM', 'ARN', 'PEDR', 'LMB', 'SUP (Etapa 2)', 'DELG', 'SFE'],
-                    certifPrevisto: [99181664.22, 24452989.37, 101563495.51, 37033666.23, 24982417, 28321400, 25422533],
-                    avanceProyectado: [0.6416, 0.204939, 0.5964, 0.1785, 0.2355, 0.100813, 0.042508]
-                }
-            },
-            '2026-04': {
-                month: 'Abril 2026',
-                idxs: {
-                    obras: ['SM', 'ARN', 'PEDR', 'LMB', 'SUP', 'DELG'],
-                    martella: {
-                        q1: [0.94, 0.99, 1.06, 0.962692, 0.95, 0.93],
-                        q2: [0.92, 1.02, 1.03, 0.948769, null, 0.93]
-                    },
-                    therock: {
-                        q1: [1.09, 1, 1.18, 1.393914, 1.02, 0.12],
-                        q2: [0.65, 0.59, 0.46, 1.248062, null, null]
-                    }
-                },
-                certif: {
-                    obras: ['SM', 'ARN', 'PEDR ALB', 'LMB', 'SUP (Etapa 1)', 'PAMP', 'OH PAMPA', 'DELG'],
-                    avanceAcum: [0.5498, 0.1731, 0.3563, 0.128, 0.9891, 0.9737, 0.4498, 0.0267],
-                    certifReal: [114084207.62, 25426406.55, 46210155.63, 31550140.71, 39439108, 49249, 10703167, 10198272.11],
-                    certifPrevisto: [104669033.65, 27503464.99, 95320293.01, 34274963.32, 0, 0, 0, 0],
-                    desvio: [9415173.97, -2077058.44, -49110137.37, -2724822.60, null, null, null, null],
-                    desvioPct: [0.0900, -0.0755, -0.5152, -0.0795, null, null, null, null],
-                    adicionales: [null, null, 0, 1368776, 0, 0, 0, 0],
-                    isPampUSD: [false, false, false, false, false, true, false, false]
-                }
-            },
-            '2026-03': {
-                month: 'Marzo 2026',
-                idxs: {
-                    obras: ['SM', 'ARN', 'PEDR', 'LMB', 'SUP'],
-                    martella: {
-                        q1: [1.07, 1.05, 1.05, 0.974911, 0.963139],
-                        q2: [1.04, 1.03, 1.06, 0.965519, null]
-                    },
-                    therock: {
-                        q1: [1.14, 0.53, 1.02, 1.280461, 0.403023],
-                        q2: [0.9, 0.62, 1.18, 0.691979, null]
-                    }
-                },
-                certif: {
-                    obras: ['SM', 'ARN', 'PEDR ALB', 'LMB', 'SUP', 'PAMP', 'OH PAMPA'],
-                    avanceAcum: [0.4442, 0.14, 0.2472, 0.085, 0.4297, 0.8037, 0.2161],
-                    certifReal: [113822063, 11835598.72, 83681875, 22095922, 16500314, 8691, 9894625],
-                    certifPrevisto: [92500133.71, 14502989.84, 82374064.16, 63470495.32, 20313940, 0, 0],
-                    desvio: [21321929.29, -2667391.12, 1307810.84, -41374573.32, -3813626, null, null],
-                    desvioPct: [0.2305, -0.1839, 0.0156, -0.6519, -0.1877, null, null],
-                    adicionales: [2296000, 3023956, 0, 10509273, 0, 0, 0],
-                    isPampUSD: [false, false, false, false, false, true, false]
-                }
-            }
-        };
+let rawData = {};
+
+async function cargarDatos() {
+
+    try {
+
+        const response = await fetch('./data.json?v=' + new Date().getTime());
+
+        if (!response.ok) {
+            throw new Error('No se pudo cargar data.json');
+        }
+
+        rawData = await response.json();
+
+        console.log('JSON cargado OK');
+        console.log(rawData);
+
+    } catch (error) {
+
+        console.error('Error cargando JSON:', error);
+
+    }
+}
 
         let currentPeriod = '2026-04';
         let idxChart = null;
@@ -855,7 +820,11 @@
                 return;
             }
 
-            const data = dataStore[period];
+            const data = {
+            idxs: rawData.idxs.filter(x => x.periodo === period),
+            certif: rawData.certif.filter(x => x.periodo === period),
+            proyeccion: rawData.proyeccion.filter(x => x.periodo === period)
+            };
             const container = document.getElementById('dashboard-content');
             
             const promediosMartellaObras = data.idxs.obras.map((obra, i) => 
