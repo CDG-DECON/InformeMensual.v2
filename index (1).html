@@ -922,9 +922,50 @@ const data = {
             let certifPrevistoChange = '';
             let martellaStatus = '';
             let therockStatus = '';
+const dataPrev = {
 
+    idxs: {
+        obras: rawData.idxs
+            .filter(x => x.periodo === '2026-03')
+            .map(x => x.obra),
+
+        martella: {
+            q1: rawData.idxs
+                .filter(x => x.periodo === '2026-03')
+                .map(x => x.martella_q1),
+
+            q2: rawData.idxs
+                .filter(x => x.periodo === '2026-03')
+                .map(x => x.martella_q2)
+        },
+
+        therock: {
+            q1: rawData.idxs
+                .filter(x => x.periodo === '2026-03')
+                .map(x => x.therock_q1),
+
+            q2: rawData.idxs
+                .filter(x => x.periodo === '2026-03')
+                .map(x => x.therock_q2)
+        }
+    },
+
+    certif: {
+        obras: rawData.certif
+            .filter(x => x.periodo === '2026-03')
+            .map(x => x.obra),
+
+        certifReal: rawData.certif
+            .filter(x => x.periodo === '2026-03')
+            .map(x => x.certif_Real),
+
+        certifPrevisto: rawData.certif
+            .filter(x => x.periodo === '2026-03')
+            .map(x => x.certif_previsto)
+    }
+};
             if (period === '2026-04') {
-                const dataPrev = dataStore['2026-03'];
+               
                 const promediosMartellaObrasPrev = dataPrev.idxs.obras.map((obra, i) => 
                     calcularPromedioObra(dataPrev.idxs.martella.q1[i], dataPrev.idxs.martella.q2[i])
                 );
@@ -949,7 +990,6 @@ const data = {
             }
 
             const cambiosPorObra = period === '2026-04' ? data.idxs.obras.map((obra, i) => {
-                const dataPrev = dataStore['2026-03'];
                 const indexPrev = dataPrev.idxs.obras.indexOf(obra);
                 
                 if (indexPrev === -1) return { martella: null, therock: null };
@@ -998,7 +1038,7 @@ const data = {
                     <div class="chart-header">
                         <div>
                             <h3 class="chart-title">Índices de Rendimiento por Obra</h3>
-                            <p class="chart-subtitle">${data.month}</p>
+                            <p class="chart-subtitle">${period}</p>
                             ${period === '2026-04' ? '<p class="chart-legend-note">Indicadores sobre barras: variación vs. período anterior</p>' : ''}
                         </div>
                     </div>
