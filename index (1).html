@@ -989,20 +989,25 @@ const dataPrev = {
                 therockStatus = getPerformanceStatus(avgTheRock, 'therock');
             }
 
-            const cambiosPorObra = period === '2026-04' ? data.idxs.obras.map((obra, i) => {
-                const indexPrev = dataPrev.idxs.obras.indexOf(obra);
-                
-                if (indexPrev === -1) return { martella: null, therock: null };
-                
-                const martellaActual = promediosMartellaObras[i];
-                const therockActual = promediosTheRockObras[i];
-                const martellaPrev = calcularPromedioObra(dataPrev.idxs.martella.q1[indexPrev], dataPrev.idxs.martella.q2[indexPrev]);
-                const therockPrev = calcularPromedioObra(dataPrev.idxs.therock.q1[indexPrev], dataPrev.idxs.therock.q2[indexPrev]);
-                
-                return {
-                    martella: getChangeIndicator(martellaActual, martellaPrev),
-                    therock: getChangeIndicator(therockActual, therockPrev)
-                };
+            const cambiosPorObra = period === '2026-04'
+    ? data.idxs.obras.map((obra, i) => {
+
+        const indexPrev = dataPrev.idxs.obras.indexOf(obra);
+
+        if (indexPrev === -1) {
+            return {
+                martella: null,
+                therock: null
+            };
+        }
+
+        return {
+            martella: ((promediosMartellaObras[i] - promediosMartellaObrasPrev[indexPrev]) / promediosMartellaObrasPrev[indexPrev]) * 100,
+            therock: ((promediosTheRockObras[i] - promediosTheRockObrasPrev[indexPrev]) / promediosTheRockObrasPrev[indexPrev]) * 100
+        };
+
+    })
+    : [];
             }) : data.idxs.obras.map(() => ({ martella: '', therock: '' }));
 
             const showDefinitions = period === '2026-04';
