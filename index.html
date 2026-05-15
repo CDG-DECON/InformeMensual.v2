@@ -774,7 +774,7 @@ async function cargarDatos() {
         }
 
         function renderProjection() {
-            const proyRows = rawData.proyeccion;
+            const proyRows = rawData.proyeccion.filter(x => x.periodo === currentPeriod);
 
             const data = {
             certifProyectado: {
