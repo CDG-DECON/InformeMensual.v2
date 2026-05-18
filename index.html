@@ -1003,25 +1003,41 @@ const dataPrev = {
     ? data.idxs.obras.map((obra, i) => {
 
         const indexPrev = dataPrev.idxs.obras.indexOf(obra);
-                const prevMartella = promediosMartellaObrasPrev[indexPrev];
-                const prevTheRock = promediosTheRockObrasPrev[indexPrev];
-        
+
         if (indexPrev === -1) {
             return {
-                if (!prevMartella || !prevTheRock) {
-                return {
                 martella: null,
                 therock: null
-    };
-}
+            };
+        }
+
+        const prevMartella = promediosMartellaObrasPrev[indexPrev];
+        const prevTheRock = promediosTheRockObrasPrev[indexPrev];
+
+        if (!prevMartella || !prevTheRock) {
+            return {
+                martella: null,
+                therock: null
+            };
+        }
 
         return {
-            martella: ((promediosMartellaObras[i] - promediosMartellaObrasPrev[indexPrev]) / promediosMartellaObrasPrev[indexPrev]) * 100,
-            therock: ((promediosTheRockObras[i] - promediosTheRockObrasPrev[indexPrev]) / promediosTheRockObrasPrev[indexPrev]) * 100
+            martella: getChangeIndicator(
+                promediosMartellaObras[i],
+                prevMartella
+            ),
+
+            therock: getChangeIndicator(
+                promediosTheRockObras[i],
+                prevTheRock
+            )
         };
 
     })
-    : [];
+    : data.idxs.obras.map(() => ({
+        martella: null,
+        therock: null
+    }));
             const showDefinitions = period === '2026-04';
 
             container.innerHTML = `
@@ -1362,7 +1378,7 @@ const dataPrev = {
                                     ctx.font = 'bold 11px JetBrains Mono';
                                     ctx.textAlign = 'center';
                                     
-                                    const isPositive = cambio > 0;
+                                    const isPositive = cambio.includes('positive');
                                     ctx.fillStyle = isPositive ? '#10b981' : '#ef4444';
                                     
                                     const tempDiv = document.createElement('div');
