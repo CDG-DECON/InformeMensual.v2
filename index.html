@@ -968,36 +968,38 @@ const dataPrev = {
 
             if (period === '2026-04') {
 
-            promediosMartellaObrasPrev = dataPrev.idxs.obras.map((obra, i) =>
-            calcularPromedioObra(
+    promediosMartellaObrasPrev = dataPrev.idxs.obras.map((obra, i) =>
+        calcularPromedioObra(
             dataPrev.idxs.martella.q1[i],
             dataPrev.idxs.martella.q2[i]
         )
     );
 
-            promediosTheRockObrasPrev = dataPrev.idxs.obras.map((obra, i) =>
-            calcularPromedioObra(
+    promediosTheRockObrasPrev = dataPrev.idxs.obras.map((obra, i) =>
+        calcularPromedioObra(
             dataPrev.idxs.therock.q1[i],
             dataPrev.idxs.therock.q2[i]
         )
     );
-}
-                const avgMartellaPrev = calcularPromedio(promediosMartellaObrasPrev);
-                const avgTheRockPrev = calcularPromedio(promediosTheRockObrasPrev);
-                const totalCertifRealPrev = dataPrev.certif.certifReal.reduce((sum, val, i) => {
-                    if (dataPrev.certif.obras[i] !== 'PAMP') return sum + val;
-                    return sum;
-                }, 0);
-                const totalCertifPrevistoPrev = dataPrev.certif.certifPrevisto.reduce((a, b) => a + b, 0);
 
-                martellaChange = getChangeIndicator(avgMartella, avgMartellaPrev);
-                therockChange = getChangeIndicator(avgTheRock, avgTheRockPrev);
-                certifRealChange = getChangeIndicator(totalCertifReal, totalCertifRealPrev);
-                certifPrevistoChange = getChangeIndicator(totalCertifPrevisto, totalCertifPrevistoPrev);
-                
-                martellaStatus = getPerformanceStatus(avgMartella, 'martella');
-                therockStatus = getPerformanceStatus(avgTheRock, 'therock');
-            }
+    const avgMartellaPrev = calcularPromedio(promediosMartellaObrasPrev);
+    const avgTheRockPrev = calcularPromedio(promediosTheRockObrasPrev);
+
+    const totalCertifRealPrev = dataPrev.certif.certifReal.reduce((sum, val, i) => {
+        if (dataPrev.certif.obras[i] !== 'PAMP') return sum + val;
+        return sum;
+    }, 0);
+
+    const totalCertifPrevistoPrev = dataPrev.certif.certifPrevisto.reduce((a, b) => a + b, 0);
+
+    martellaChange = getChangeIndicator(avgMartella, avgMartellaPrev);
+    therockChange = getChangeIndicator(avgTheRock, avgTheRockPrev);
+    certifRealChange = getChangeIndicator(totalCertifReal, totalCertifRealPrev);
+    certifPrevistoChange = getChangeIndicator(totalCertifPrevisto, totalCertifPrevistoPrev);
+
+    martellaStatus = getPerformanceStatus(avgMartella, 'martella');
+    therockStatus = getPerformanceStatus(avgTheRock, 'therock');
+}
 
             const cambiosPorObra = period === '2026-04'
     ? data.idxs.obras.map((obra, i) => {
